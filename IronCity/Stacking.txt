@@ -1,0 +1,11 @@
+See https://dcc-ex.com/reference/hardware/motorboards/ex-motor-shield-8874.html#stacking-ex-motorshield8874s&gsc.tab=0
+
+
+// Dual stacked EX-MotorShield8874s
+// For Arduino UNO, Mega and any 5v microcontroller
+#define MOTOR_SHIELD_TYPE EX8874_DUAL_STACKED
+#define EX8874_DUAL_STACKED F("EX8874_DUAL_STACKED"),\
+new MotorDriver( 3, 12, UNUSED_PIN, 9, A0, 5.08, 5000, A4), \
+new MotorDriver(11, 13, UNUSED_PIN, 8, A1, 5.08, 5000, A5), \
+new MotorDriver( 2, 10, UNUSED_PIN, 7, A2, 5.08, 5000, A6), \
+new MotorDriver( 5,  4, UNUSED_PIN, 6, A3, 5.08, 5000, A7)
