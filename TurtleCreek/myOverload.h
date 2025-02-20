@@ -1,23 +1,38 @@
-// See https://dcc-ex.com/exrail/exrail-command-reference.html#controlling-overload-shorts
+/* See https://dcc-ex.com/exrail/exrail-command-reference.html#controlling-overload-shorts
+ * Simple script to trigger anything on PIN 51 & 53, and send a message to
+ * LCD screen when the CS detects an Overload.  
+ * In my case, I set have both an Active Buzzer on 51, and a 
+ * red LED on PIN 53
+ *
+ * TO INSTALL:
+ *   1) Place this script in the same directory as your myAutomation.h
+ *   2) make the PIN numbers in the ALIAS commands match what ever PINs you are using
+ *   3) Add the line    #include "myOverload.h"   to the bottom of you myAutomation.h file
+ *   4) Upload to your CS
+*/
 
-// Adding to short-detection...
+ALIAS(audibleNotice,51)     // Set an alias for PIN 52
+                            // This pin is my "audio beep" 
+
+ALIAS(myRedLED,53)          // Set an alias for PIN 53
+                            // This pin is my "red LED" 
+
 ONOVERLOAD(A)
-  LCD(6, "OVERLOAD A POWEROFF")
-  PRINT("Overload Detected on A - Turn Off Power")
-  SET_TRACK(A, NONE)   // Unsets the TrackManager assignment and turns off power.
-  SET(27)              // Light the LED
+  LCD(6, "OVERLOAD Trk A")   // Send message to line 6 of the LCD Screen
+  SET(audibleNotice)         // Turn on PIN @ "OverloadNotice"
+  SET(myRedLED)
   AFTEROVERLOAD(A)
-      LCD(6, "RESTORE A POWER ON")
-      PRINT("Overload Cleared on A - Power Restored")
-      RESET(27)
-      DELAY(2000)
-      LCD(6, "                  ")
+    RESET(audibleNotice)     // Turn off PIN @ "OverloadNotice" 
+    RESET(myRedLED)
+     LCD(6,"Trk A Clear")    // Send message to the LCD Screen
 DONE
-// The following turns the poweron and allows the AFTEROVERLOAD to run
-// This could also be achieved with a physical button and AFTER(pin) in place of ROUTE()
-ROUTE(901,"RR:Reset A")
-  LCD(6,"                  ")
-  SETLOCO(5) 
-  SET_TRACK(A, DC)
-  POWERON
+
+ONOVERLOAD(B)
+  LCD(7, "OVERLOAD Trk B")   // Send message to line 7 of the LCD Screen
+  SET(audibleNotice)         // Turn on PIN @ "OverloadNotice"
+  SET(myRedLED)
+  AFTEROVERLOAD(B)
+    RESET(audibleNotice)     // Turn off PIN @ "OverloadNotice"
+    RESET(myRedLED)
+    LCD(7,"Trk B Clear")     // Send message to the LCD Screen
 DONE
